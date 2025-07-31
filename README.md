@@ -1,6 +1,6 @@
 # PNote: Your Thoughts, Organized
 
-![PNote Logo]([logo.png](https://raw.githubusercontent.com/PatilParas05/YOUR_REPO_NAME/main/Screenshot/pnote_logo.png)) A simple yet effective Personal Note (PNote) application built with **Kotlin** and **Jetpack Compose**, designed to help you quickly jot down and manage your thoughts. All your notes are securely stored locally using **SQLite** (powered by the Room Persistence Library), ensuring your data is always at your fingertips.
+<img src="https://raw.githubusercontent.com/PatilParas05/PNotes/main/Screenshot/logo.png" alt="PNote Logo" height="50" width="50"/>A simple yet effective Personal Note (PNote) application built with **Kotlin** and **Jetpack Compose**, designed to help you quickly jot down and manage your thoughts. All your notes are securely stored locally using **SQLite** (powered by the Room Persistence Library), ensuring your data is always at your fingertips.
 
 ## ✨ Features
 
