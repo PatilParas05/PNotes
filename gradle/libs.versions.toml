@@ -1,0 +1,59 @@
+# libs.versions.toml
+
+[versions]
+agp = "8.11.1"
+kotlin = "2.0.21"
+coreKtx = "1.10.1"
+junit = "4.13.2"
+junitVersion = "1.1.5"
+espressoCore = "3.5.1"
+lifecycleRuntimeKtx = "2.9.1"
+activityCompose = "1.8.0"
+composeBom = "2024.09.00"
+
+# --- NEW/UPDATED VERSIONS ---
+room = "2.6.1"       # Latest stable Room version (adjust if a newer stable exists)
+lifecycle = "2.7.0"  # Latest stable Lifecycle version (adjust if a newer stable exists)
+ksp = "2.0.21-1.0.28"
+navigationComposeJvmstubs = "2.9.2" # IMPORTANT: Latest stable KSP for Kotlin 2.0.21. Verify on KSP GitHub releases if you want to be precise.
+# We don't need a specific version for Compose Compiler here if using Kotlin 2.0.x and kotlin-compose plugin
+
+[libraries]
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
+androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
+androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
+androidx-ui = { group = "androidx.compose.ui", name = "ui" }
+androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
+androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+
+# --- NEW/UPDATED LIBRARIES ---
+# Room Dependencies
+androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+
+# Lifecycle ViewModel Compose
+androidx-lifecycle-viewmodel-compose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycle" }
+
+# Material Icons Extended (fixes 'unresolved reference 'material'.:79' if you're using Icons.Default or Icons.Extended)
+# Note: No version.ref needed as it's typically managed by the composeBom
+androidx-compose-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended" }
+androidx-navigation-compose-jvmstubs = { group = "androidx.navigation", name = "navigation-compose-jvmstubs", version.ref = "navigationComposeJvmstubs" }
+
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+
+# --- NEW PLUGIN ---
+# KSP Plugin
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
