@@ -57,17 +57,3 @@ class MainActivity : ComponentActivity() {
 fun Date.formatToString(): String{
     return SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(this)
 }
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    PNoteTheme {
-
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
-        ) {
-            Text(text = "PNote App Preview") // A placeholder, actual UI is in NoteListScreen
-        }
-    }
-}

@@ -1,7 +1,5 @@
 package com.example.pnote.ui
 
-
-
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -11,12 +9,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.compose.rememberNavController
 import androidx.navigation.NavController
-import com.example.pnote.Note
+import androidx.navigation.compose.rememberNavController
 import com.example.pnote.NoteViewModel
 import com.example.pnote.ui.theme.PNoteTheme
-import java.util.Date
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -25,6 +23,12 @@ fun AddEditNoteScreen(navController: NavController, noteViewModel: NoteViewModel
 
     var title by remember { mutableStateOf(currentNote?.title ?: "") }
     var content by remember { mutableStateOf(currentNote?.content ?: "") }
+
+    val isTitleBlank = title.isBlank()
+    val isContentBlank = content.isBlank()
+    val isSaveEnabled = !isTitleBlank && !isContentBlank
+
+    var showErrors by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -36,15 +40,26 @@ fun AddEditNoteScreen(navController: NavController, noteViewModel: NoteViewModel
                     }
                 },
                 actions = {
-                    IconButton(onClick = {
-                        if (currentNote == null) {
-                            noteViewModel.createNote(title, content)
-                        } else {
-                            noteViewModel.updateNote(currentNote!!, title, content)
-                        }
-                        navController.popBackStack()
-                    }) {
-                        Icon(Icons.Filled.Check, contentDescription = "Save Note")
+                    IconButton(
+                        onClick = {
+                            if (isSaveEnabled) {
+                                if (currentNote == null) {
+                                    noteViewModel.createNote(title, content)
+                                } else {
+                                    noteViewModel.updateNote(currentNote!!, title, content)
+                                }
+                                navController.popBackStack()
+                            } else {
+                                showErrors = true
+                            }
+                        },
+                        enabled = true
+                    ) {
+                        Icon(
+                            Icons.Filled.Check,
+                            contentDescription = "Save Note",
+                            tint = if (isSaveEnabled) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline
+                        )
                     }
                 }
             )
@@ -58,27 +73,47 @@ fun AddEditNoteScreen(navController: NavController, noteViewModel: NoteViewModel
         ) {
             OutlinedTextField(
                 value = title,
-                onValueChange = { title = it },
+                onValueChange = {
+                    title = it
+                    if (it.isNotBlank()) showErrors = false
+                },
                 label = { Text("Title") },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                isError = showErrors && isTitleBlank,
+                supportingText = {
+                    if (showErrors && isTitleBlank) {
+                        Text("Title cannot be empty", color = MaterialTheme.colorScheme.error)
+                    }
+                },
+                singleLine = true
             )
+
             Spacer(modifier = Modifier.height(16.dp))
+
             OutlinedTextField(
                 value = content,
-                onValueChange = { content = it },
+                onValueChange = {
+                    content = it
+                    if (it.isNotBlank()) showErrors = false
+                },
                 label = { Text("Content") },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(1f) // Makes it fill remaining space
+                    .weight(1f),
+                isError = showErrors && isContentBlank,
+                supportingText = {
+                    if (showErrors && isContentBlank) {
+                        Text("Content cannot be empty", color = MaterialTheme.colorScheme.error)
+                    }
+                }
             )
         }
     }
 }
 
-
 @Preview(showBackground = true, widthDp = 360, heightDp = 640)
 @Composable
-fun AddEditNoteScreenPreview_CreateNew() {
+fun AddEditNoteScreenPreview_EmptyValidation() {
     PNoteTheme {
         val navController = rememberNavController()
         val dummyNoteViewModel = remember {
@@ -89,60 +124,12 @@ fun AddEditNoteScreenPreview_CreateNew() {
                 override suspend fun update(note: com.example.pnote.Note) {}
                 override suspend fun delete(note: com.example.pnote.Note) {}
             }) {}) {
-                // Override the methods that would be called in the UI to prevent crashes or unwanted behavior in preview
-                override fun createNote(title: String, content: String) {
-                    println("Preview: createNote called with title=$title, content=$content")
-                }
-                override fun updateNote(note: com.example.pnote.Note, newTitle: String, newContent: String) {
-                    println("Preview: updateNote called for note ID ${note.id} with newTitle=$newTitle, newContent=$newContent")
-                }
-                override fun selectNote(note: com.example.pnote.Note?) {
-                    _currentNote.value = note // Simulate selecting a note for preview
-                }
-                // Initialize _currentNote to null for "Create New Note" scenario
-                init {
-                    _currentNote.value = null
-                }
+                override fun createNote(title: String, content: String) {}
+                override fun updateNote(note: com.example.pnote.Note, newTitle: String, newContent: String) {}
+                override fun selectNote(note: com.example.pnote.Note?) { _currentNote.value = note }
+                init { _currentNote.value = null }
             }
         }
-
-        AddEditNoteScreen(navController = navController, noteViewModel = dummyNoteViewModel)
-    }
-}
-
-@Preview(showBackground = true, widthDp = 360, heightDp = 640)
-@Composable
-fun AddEditNoteScreenPreview_EditExisting() {
-    PNoteTheme {
-        val navController = rememberNavController()
-
-        // Create a dummy NoteViewModel for the preview
-        val dummyNoteViewModel = remember {
-            object : NoteViewModel(object : com.example.pnote.NoteRepository(object : com.example.pnote.NoteDao {
-                override fun getAllNotes(): kotlinx.coroutines.flow.Flow<List<com.example.pnote.Note>> = kotlinx.coroutines.flow.flowOf(emptyList())
-                override suspend fun getNoteById(noteId: Int): com.example.pnote.Note? = null
-                override suspend fun insert(note: com.example.pnote.Note) {}
-                override suspend fun update(note: com.example.pnote.Note) {}
-                override suspend fun delete(note: com.example.pnote.Note) {}
-            }) {}) {
-                override fun createNote(title: String, content: String) { /* do nothing */ }
-                override fun updateNote(note: com.example.pnote.Note, newTitle: String, newContent: String) { /* do nothing */ }
-                override fun selectNote(note: com.example.pnote.Note?) {
-                    _currentNote.value = note
-                }
-                // Initialize _currentNote with a sample note for "Edit Note" scenario
-                init {
-                    _currentNote.value = Note(
-                        id = 1,
-                        title = "My Existing Note",
-                        content = "This is some pre-filled content for editing.",
-                        createdDate = Date(),
-                        modifiedDate = Date()
-                    )
-                }
-            }
-        }
-
         AddEditNoteScreen(navController = navController, noteViewModel = dummyNoteViewModel)
     }
 }

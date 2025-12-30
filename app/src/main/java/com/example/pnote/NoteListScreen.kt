@@ -29,8 +29,7 @@ fun NoteListScreen(navController: NavController, noteViewModel: NoteViewModel) {
         },
         floatingActionButton = {
             FloatingActionButton(onClick = {
-                // This calls the 'selectNote' function on your NoteViewModel instance
-                noteViewModel.selectNote(null) // Corrected method name
+                noteViewModel.selectNote(null)
                 navController.navigate("add_edit_note")
             }) {
                 Icon(Icons.Filled.Add, "Add new note")
@@ -53,7 +52,7 @@ fun NoteListScreen(navController: NavController, noteViewModel: NoteViewModel) {
                         note = note,
                         onNoteClick = {
                             // This calls the 'selectNote' function on your NoteViewModel instance
-                            noteViewModel.selectNote(note) // Corrected method name
+                            noteViewModel.selectNote(note)
                             navController.navigate("add_edit_note")
                         },
                         onDeleteClick = {
@@ -85,8 +84,7 @@ fun NoteItem(note: Note, onNoteClick: (Note) -> Unit, onDeleteClick: (Note) -> U
             Text(text = note.content, style = MaterialTheme.typography.bodyMedium, maxLines = 2)
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                // Calls the 'formatToString' extension function on the 'modifiedDate' property of the Note object
-                text = "Modified: ${note.modifiedDate.formatToString()}", // Corrected property name and function call
+                text = "Modified: ${note.modifiedDate.formatToString()}",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -94,7 +92,6 @@ fun NoteItem(note: Note, onNoteClick: (Note) -> Unit, onDeleteClick: (Note) -> U
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End
             ) {
-                // Delete button in NoteItem for quick deletion
                 IconButton(onClick = { onDeleteClick(note) }) {
                     Icon(Icons.Default.Delete, contentDescription = "Delete Note")
                 }

@@ -1,6 +1,6 @@
-// In your DateConverters.kt file (likely at app/src/main/java/com/example/pnote/DateConverters.kt)
 
-package com.example.pnote // Based on your project structure
+
+package com.example.pnote
 
 import androidx.room.TypeConverter
 import java.util.Date
