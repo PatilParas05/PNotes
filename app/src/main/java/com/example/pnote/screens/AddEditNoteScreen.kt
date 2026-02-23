@@ -1,35 +1,48 @@
-package com.example.pnote.ui
+package com.example.pnote.screens
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
-import com.example.pnote.screens.NoteViewModel
-import com.example.pnote.ui.theme.PNoteTheme
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import com.example.pnote.data.Note
-import com.example.pnote.data.NoteDao
-import com.example.pnote.repository.NoteRepository
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddEditNoteScreen(navController: NavController, noteViewModel: NoteViewModel) {
-    val currentNote by noteViewModel.currentNote.collectAsState()
+    val currentNote by noteViewModel.currentNote.collectAsStateWithLifecycle()
 
-    var title by remember { mutableStateOf(currentNote?.title ?: "") }
-    var content by remember { mutableStateOf(currentNote?.content ?: "") }
+    var title by remember { mutableStateOf("") }
+    var content by remember { mutableStateOf("") }
 
-    val isTitleBlank = title.isBlank()
-    val isContentBlank = content.isBlank()
-    val isSaveEnabled = !isTitleBlank && !isContentBlank
+    LaunchedEffect(currentNote) {
+        title = currentNote?.title ?: ""
+        content = currentNote?.content ?: ""
+    }
+
+    val isSaveEnabled by remember { derivedStateOf { title.isNotBlank() && content.isNotBlank() } }
 
     var showErrors by remember { mutableStateOf(false) }
 
@@ -56,7 +69,7 @@ fun AddEditNoteScreen(navController: NavController, noteViewModel: NoteViewModel
                                 showErrors = true
                             }
                         },
-                        enabled = true
+                        enabled = isSaveEnabled
                     ) {
                         Icon(
                             Icons.Filled.Check,
@@ -82,9 +95,9 @@ fun AddEditNoteScreen(navController: NavController, noteViewModel: NoteViewModel
                 },
                 label = { Text("Title") },
                 modifier = Modifier.fillMaxWidth(),
-                isError = showErrors && isTitleBlank,
+                isError = showErrors && title.isBlank(),
                 supportingText = {
-                    if (showErrors && isTitleBlank) {
+                    if (showErrors && title.isBlank()) {
                         Text("Title cannot be empty", color = MaterialTheme.colorScheme.error)
                     }
                 },
@@ -103,36 +116,13 @@ fun AddEditNoteScreen(navController: NavController, noteViewModel: NoteViewModel
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f),
-                isError = showErrors && isContentBlank,
+                isError = showErrors && content.isBlank(),
                 supportingText = {
-                    if (showErrors && isContentBlank) {
+                    if (showErrors && content.isBlank()) {
                         Text("Content cannot be empty", color = MaterialTheme.colorScheme.error)
                     }
                 }
             )
         }
-    }
-}
-
-@Preview(showBackground = true, widthDp = 360, heightDp = 640)
-@Composable
-fun AddEditNoteScreenPreview_EmptyValidation() {
-    PNoteTheme {
-        val navController = rememberNavController()
-        val dummyNoteViewModel = remember {
-            object : NoteViewModel(object : NoteRepository(object : NoteDao {
-                override fun getAllNotes(): kotlinx.coroutines.flow.Flow<List<Note>> = kotlinx.coroutines.flow.flowOf(emptyList())
-                override suspend fun getNoteById(noteId: Int): Note? = null
-                override suspend fun insert(note: Note) {}
-                override suspend fun update(note: Note) {}
-                override suspend fun delete(note: Note) {}
-            }) {}) {
-                override fun createNote(title: String, content: String) {}
-                override fun updateNote(note: Note, newTitle: String, newContent: String) {}
-                override fun selectNote(note: Note?) { _currentNote.value = note }
-                init { _currentNote.value = null }
-            }
-        }
-        AddEditNoteScreen(navController = navController, noteViewModel = dummyNoteViewModel)
     }
 }

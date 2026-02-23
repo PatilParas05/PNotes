@@ -7,32 +7,26 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.pnote.database.NoteDatabase
 import com.example.pnote.repository.NoteRepository
+import com.example.pnote.screens.AddEditNoteScreen
+import com.example.pnote.screens.NoteListScreen
 import com.example.pnote.screens.NoteViewModel
-import com.example.pnote.ui.AddEditNoteScreen
-import com.example.pnote.ui.NoteListScreen
 import com.example.pnote.ui.theme.PNoteTheme
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-
-
-
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val database= NoteDatabase.getDatabase(this)
-        val repository= NoteRepository(database.noteDao())
+        val database = NoteDatabase.getDatabase(this)
+        val repository = NoteRepository(database.noteDao())
         enableEdgeToEdge()
         setContent {
             PNoteTheme {
@@ -41,14 +35,13 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val navController = rememberNavController()
-                    val noteViewModel : NoteViewModel =viewModel(factory = NoteViewModel.provideFactory(repository))
-                    NavHost(navController=navController, startDestination = "noteList") {
+                    val noteViewModel: NoteViewModel = viewModel(factory = NoteViewModel.provideFactory(repository))
+                    NavHost(navController = navController, startDestination = "noteList") {
                         composable("noteList") {
-                            NoteListScreen(navController=navController, noteViewModel=noteViewModel)
-
+                            NoteListScreen(navController = navController, noteViewModel = noteViewModel)
                         }
                         composable("add_edit_note") {
-                            AddEditNoteScreen(navController=navController, noteViewModel=noteViewModel)
+                            AddEditNoteScreen(navController = navController, noteViewModel = noteViewModel)
                         }
                     }
                 }
@@ -57,6 +50,6 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-fun Date.formatToString(): String{
+fun Date.formatToString(): String {
     return SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(this)
 }

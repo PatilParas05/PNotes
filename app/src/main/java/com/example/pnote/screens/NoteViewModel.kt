@@ -8,14 +8,15 @@ import com.example.pnote.repository.NoteRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.Date
 
 open class NoteViewModel(private val repository: NoteRepository): ViewModel(){
     val allNotes: StateFlow<List<Note>> = repository.allNotes.stateIn(viewModelScope, SharingStarted.Companion.Lazily, emptyList())
-    val _currentNote = MutableStateFlow<Note?>(null)
-    val currentNote: StateFlow<Note?> = _currentNote
+    private val _currentNote = MutableStateFlow<Note?>(null)
+    val currentNote: StateFlow<Note?> = _currentNote.asStateFlow()
     open fun createNote(title: String, content: String){
         viewModelScope.launch {
             val newNote = Note(

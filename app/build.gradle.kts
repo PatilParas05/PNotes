@@ -1,5 +1,3 @@
-// build.gradle.kts (Module: app)
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -40,9 +38,7 @@ android {
     buildFeatures {
         compose = true
     }
-    composeOptions {
-        // No explicit kotlinCompilerExtensionVersion needed for Kotlin 2.0.x with the compose plugin
-    }
+
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -55,23 +51,26 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
-    implementation(platform(libs.androidx.compose.bom)) // Keep this for Compose UI components
+    implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
 
-    // Keep this line for Compose Navigation
+    //  Compose Navigation
     implementation("androidx.navigation:navigation-compose:2.7.7")
 
     // Room components
     implementation(libs.androidx.room.runtime)
-    // REMOVED: implementation(libs.androidx.navigation.compose.jvmstubs) <--- THIS WAS THE PROBLEM
+
     ksp(libs.androidx.room.compiler) // Referencing the 'room-compiler' through 'ksp'
     implementation(libs.androidx.room.ktx)
 
     // ViewModel utilities for Compose
     implementation(libs.androidx.lifecycle.viewmodel.compose)
+
+    // Lifecycle runtime compose
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.10.0")
 
     // Material Icons Extended
     implementation(libs.androidx.compose.material.icons.extended)
