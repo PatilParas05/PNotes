@@ -11,10 +11,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.pnote.NoteViewModel
+import com.example.pnote.screens.NoteViewModel
 import com.example.pnote.ui.theme.PNoteTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import com.example.pnote.data.Note
+import com.example.pnote.data.NoteDao
+import com.example.pnote.repository.NoteRepository
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -117,16 +120,16 @@ fun AddEditNoteScreenPreview_EmptyValidation() {
     PNoteTheme {
         val navController = rememberNavController()
         val dummyNoteViewModel = remember {
-            object : NoteViewModel(object : com.example.pnote.NoteRepository(object : com.example.pnote.NoteDao {
-                override fun getAllNotes(): kotlinx.coroutines.flow.Flow<List<com.example.pnote.Note>> = kotlinx.coroutines.flow.flowOf(emptyList())
-                override suspend fun getNoteById(noteId: Int): com.example.pnote.Note? = null
-                override suspend fun insert(note: com.example.pnote.Note) {}
-                override suspend fun update(note: com.example.pnote.Note) {}
-                override suspend fun delete(note: com.example.pnote.Note) {}
+            object : NoteViewModel(object : NoteRepository(object : NoteDao {
+                override fun getAllNotes(): kotlinx.coroutines.flow.Flow<List<Note>> = kotlinx.coroutines.flow.flowOf(emptyList())
+                override suspend fun getNoteById(noteId: Int): Note? = null
+                override suspend fun insert(note: Note) {}
+                override suspend fun update(note: Note) {}
+                override suspend fun delete(note: Note) {}
             }) {}) {
                 override fun createNote(title: String, content: String) {}
-                override fun updateNote(note: com.example.pnote.Note, newTitle: String, newContent: String) {}
-                override fun selectNote(note: com.example.pnote.Note?) { _currentNote.value = note }
+                override fun updateNote(note: Note, newTitle: String, newContent: String) {}
+                override fun selectNote(note: Note?) { _currentNote.value = note }
                 init { _currentNote.value = null }
             }
         }

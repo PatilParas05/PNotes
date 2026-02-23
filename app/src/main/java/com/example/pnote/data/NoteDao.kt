@@ -1,8 +1,12 @@
-package com.example.pnote
+package com.example.pnote.data
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
-import java.util.Date
 
 @Dao
 interface NoteDao{
@@ -12,7 +16,7 @@ interface NoteDao{
     @Query("SELECT * FROM notes WHERE id = :noteId")
     suspend fun getNoteById(noteId: Int): Note?
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
     suspend fun insert(notes: Note)
     @Delete
     suspend fun delete(notes: Note)

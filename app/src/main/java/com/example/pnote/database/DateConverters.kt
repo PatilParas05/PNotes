@@ -1,6 +1,4 @@
-
-
-package com.example.pnote
+package com.example.pnote.database
 
 import androidx.room.TypeConverter
 import java.util.Date

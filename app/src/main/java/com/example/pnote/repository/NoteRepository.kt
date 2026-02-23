@@ -1,5 +1,7 @@
-package com.example.pnote
+package com.example.pnote.repository
 
+import com.example.pnote.data.Note
+import com.example.pnote.data.NoteDao
 import kotlinx.coroutines.flow.Flow
 import java.util.Date
 

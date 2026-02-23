@@ -1,26 +1,25 @@
-package com.example.pnote
+package com.example.pnote.screens
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.example.pnote.data.Note
+import com.example.pnote.repository.NoteRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.Date
-import com.example.pnote.Note
-import com.example.pnote.NoteDao
-import com.example.pnote.NoteRepository
-import com.example.pnote.NoteDatabase
-import kotlinx.coroutines.flow.stateIn
 
 open class NoteViewModel(private val repository: NoteRepository): ViewModel(){
-    val allNotes: StateFlow<List<Note>> = repository.allNotes.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+    val allNotes: StateFlow<List<Note>> = repository.allNotes.stateIn(viewModelScope, SharingStarted.Companion.Lazily, emptyList())
     val _currentNote = MutableStateFlow<Note?>(null)
     val currentNote: StateFlow<Note?> = _currentNote
     open fun createNote(title: String, content: String){
         viewModelScope.launch {
-            val newNote = Note(title = title,
+            val newNote = Note(
+                title = title,
                 content = content,
                 createdDate = Date(),
                 modifiedDate = Date()

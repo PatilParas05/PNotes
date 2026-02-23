@@ -15,6 +15,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.pnote.database.NoteDatabase
+import com.example.pnote.repository.NoteRepository
+import com.example.pnote.screens.NoteViewModel
 import com.example.pnote.ui.AddEditNoteScreen
 import com.example.pnote.ui.NoteListScreen
 import com.example.pnote.ui.theme.PNoteTheme
@@ -28,7 +31,7 @@ import java.util.Locale
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val database=NoteDatabase.getDatabase(this)
+        val database= NoteDatabase.getDatabase(this)
         val repository= NoteRepository(database.noteDao())
         enableEdgeToEdge()
         setContent {

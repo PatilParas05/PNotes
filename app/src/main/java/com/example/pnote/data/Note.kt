@@ -1,4 +1,4 @@
-package com.example.pnote
+package com.example.pnote.data
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -13,5 +13,3 @@ data class Note(
     val createdDate: Date,
     val modifiedDate: Date
 )
-
-

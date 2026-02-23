@@ -1,11 +1,14 @@
-package com.example.pnote
+package com.example.pnote.database
 
-import androidx.room.Database
 import android.content.Context
-import androidx.room.Entity
+import androidx.room.Database
+import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import androidx.room.Room
+import com.example.pnote.database.DateConverters
+import com.example.pnote.data.Note
+import com.example.pnote.data.NoteDao
+
 @Database(entities = [Note::class], version = 1,exportSchema = false)
 @TypeConverters(DateConverters::class)
 abstract class NoteDatabase : RoomDatabase() {

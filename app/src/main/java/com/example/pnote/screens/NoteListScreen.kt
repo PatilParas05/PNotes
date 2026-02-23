@@ -14,8 +14,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.pnote.Note // Correct as per your current project structure (Note is in com.example.pnote)
-import com.example.pnote.NoteViewModel // Correct as per your current project structure (NoteViewModel is in com.example.pnote)
+import com.example.pnote.data.Note // Correct as per your current project structure (Note is in com.example.pnote)
+import com.example.pnote.screens.NoteViewModel // Correct as per your current project structure (NoteViewModel is in com.example.pnote)
 import com.example.pnote.formatToString // This import MUST be here if formatToString is in com.example.pnote
 
 @OptIn(ExperimentalMaterial3Api::class)
